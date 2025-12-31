@@ -61,7 +61,7 @@ RUN ARCH=$(dpkg --print-architecture) && \
     echo "Pre-built git-delta not available for $ARCH, installing from source or skipping..." && \
     if command -v cargo >/dev/null 2>&1; then \
       echo "Installing git-delta from cargo..." && \
-      cargo install git-delta --version ${GIT_DELTA_VERSION}; \
+      cargo install git-delta --version=${GIT_DELTA_VERSION}; \
     else \
       echo "WARNING: git-delta not available for $ARCH and cargo not installed. Skipping git-delta installation."; \
     fi; \
