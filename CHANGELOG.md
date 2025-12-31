@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Added support for LoongArch architecture (loong64) in DevContainer Dockerfile
+- Improved git-delta installation with fallback mechanism for unsupported architectures
+
 ## 2.0.74
 
 - Added LSP (Language Server Protocol) tool for code intelligence features like go-to-definition, find references, and hover documentation
