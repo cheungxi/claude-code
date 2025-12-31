@@ -50,9 +50,22 @@ WORKDIR /workspace
 
 ARG GIT_DELTA_VERSION=0.18.2
 RUN ARCH=$(dpkg --print-architecture) && \
-  wget "https://github.com/dandavison/delta/releases/download/${GIT_DELTA_VERSION}/git-delta_${GIT_DELTA_VERSION}_${ARCH}.deb" && \
-  sudo dpkg -i "git-delta_${GIT_DELTA_VERSION}_${ARCH}.deb" && \
-  rm "git-delta_${GIT_DELTA_VERSION}_${ARCH}.deb"
+  echo "Detected architecture: $ARCH" && \
+  DELTA_URL="https://github.com/dandavison/delta/releases/download/${GIT_DELTA_VERSION}/git-delta_${GIT_DELTA_VERSION}_${ARCH}.deb" && \
+  if wget --spider "$DELTA_URL" 2>/dev/null; then \
+    echo "Downloading git-delta for $ARCH..." && \
+    wget "$DELTA_URL" && \
+    sudo dpkg -i "git-delta_${GIT_DELTA_VERSION}_${ARCH}.deb" && \
+    rm "git-delta_${GIT_DELTA_VERSION}_${ARCH}.deb"; \
+  else \
+    echo "Pre-built git-delta not available for $ARCH, installing from source or skipping..." && \
+    if command -v cargo >/dev/null 2>&1; then \
+      echo "Installing git-delta from cargo..." && \
+      cargo install git-delta --version=${GIT_DELTA_VERSION}; \
+    else \
+      echo "WARNING: git-delta not available for $ARCH and cargo not installed. Skipping git-delta installation."; \
+    fi; \
+  fi
 
 # Set up non-root user
 USER node
